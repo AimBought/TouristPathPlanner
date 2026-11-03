@@ -1,0 +1,555 @@
+{
+  "schema_version": 2,
+  "attractions": {
+    "dc783ebc-889f-4518-8120-54f1e0094963": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Katedra Wawelska",
+          "description": "Wnętrze Katedry, bez wejścia na wieżę.",
+          "location": "Wawel",
+          "category": "interior",
+          "tags": [
+            "historia",
+            "religia"
+          ],
+          "accessibility_note": "Warunki wymagają sprawdzenia",
+          "stroller_allowed": null,
+          "large_luggage_allowed": null,
+          "closures": [],
+          "id": "dc783ebc-889f-4518-8120-54f1e0094963",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.516128+00:00"
+        }
+      ]
+    },
+    "0605b00d-3fc8-4e9a-8ddc-97d19ea8d130": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Dzwon Zygmunta",
+          "description": "Osobny punkt zwiedzania wieży.",
+          "location": "Wawel",
+          "category": "interior",
+          "tags": [],
+          "accessibility_note": "Schody",
+          "stroller_allowed": false,
+          "large_luggage_allowed": null,
+          "closures": [],
+          "id": "0605b00d-3fc8-4e9a-8ddc-97d19ea8d130",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.520077+00:00"
+        }
+      ]
+    },
+    "9a5522b9-e2c5-4990-8301-9f757c0db388": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Dziedziniec Arkadowy",
+          "description": "Przykładowa przestrzeń zewnętrzna.",
+          "location": "Wawel",
+          "category": "passage",
+          "tags": [],
+          "accessibility_note": "Brak informacji",
+          "stroller_allowed": null,
+          "large_luggage_allowed": null,
+          "closures": [],
+          "id": "9a5522b9-e2c5-4990-8301-9f757c0db388",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.522073+00:00"
+        }
+      ]
+    }
+  },
+  "visits": {
+    "349f2965-d763-4f37-9b64-744ae195b3ab": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Katedra z przewodnikiem",
+          "description": "Wariant oprowadzania.",
+          "attraction_id": "dc783ebc-889f-4518-8120-54f1e0094963",
+          "mode": "guided",
+          "duration_minutes": 60,
+          "admission_included": true,
+          "language": "pl",
+          "meeting_point": "Do ustalenia",
+          "id": "349f2965-d763-4f37-9b64-744ae195b3ab",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.524160+00:00"
+        }
+      ]
+    },
+    "0382a115-5428-4b74-90e6-f68282642a74": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Katedra samodzielnie",
+          "description": "Inny produkt tego samego miejsca.",
+          "attraction_id": "dc783ebc-889f-4518-8120-54f1e0094963",
+          "mode": "self_guided",
+          "duration_minutes": 45,
+          "admission_included": true,
+          "language": "pl",
+          "meeting_point": "Do ustalenia",
+          "id": "0382a115-5428-4b74-90e6-f68282642a74",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.525330+00:00"
+        }
+      ]
+    },
+    "4870f158-3c25-4224-adfa-e234ae45ae41": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Wejście na wieżę",
+          "description": "Produkt zwiedzania wieży.",
+          "attraction_id": "0605b00d-3fc8-4e9a-8ddc-97d19ea8d130",
+          "mode": "self_guided",
+          "duration_minutes": 20,
+          "admission_included": true,
+          "language": "pl",
+          "meeting_point": "Do ustalenia",
+          "id": "4870f158-3c25-4224-adfa-e234ae45ae41",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.526556+00:00"
+        }
+      ]
+    },
+    "9f87d7c9-86d8-447d-a470-ebe09caf2954": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Dziedziniec z nagraniem",
+          "description": "Audio po przestrzeni zewnętrznej.",
+          "attraction_id": "9a5522b9-e2c5-4990-8301-9f757c0db388",
+          "mode": "audio",
+          "duration_minutes": 30,
+          "admission_included": false,
+          "language": "pl",
+          "meeting_point": "Do ustalenia",
+          "id": "9f87d7c9-86d8-447d-a470-ebe09caf2954",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.529074+00:00"
+        }
+      ]
+    }
+  },
+  "services": {
+    "ccdb86ec-74a7-4ef3-900c-38b38e8abd17": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Transfer hotel Wawel",
+          "description": "Przykład usługi bez atrakcji.",
+          "service_type": "transfer",
+          "details": {
+            "pickup": "Hotel",
+            "destination": "Wawel"
+          },
+          "closures": [],
+          "id": "ccdb86ec-74a7-4ef3-900c-38b38e8abd17",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.533848+00:00"
+        }
+      ]
+    },
+    "77a4edb6-a0fa-4aac-970a-7d4f4df629bd": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Ubezpieczenie",
+          "description": "Dydaktyczna usługa dodatkowa.",
+          "service_type": "insurance",
+          "details": {
+            "coverage": "Zakres przykładowy"
+          },
+          "closures": [],
+          "id": "77a4edb6-a0fa-4aac-970a-7d4f4df629bd",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.535856+00:00"
+        }
+      ]
+    }
+  },
+  "packages": {
+    "949de9f4-af6a-403e-9f88-0d90e3a3f8cd": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Katedra i wieża z transferem",
+          "description": "Zestaw produktów i usług.",
+          "items": [
+            {
+              "kind": "visit",
+              "id": "349f2965-d763-4f37-9b64-744ae195b3ab",
+              "quantity": 1
+            },
+            {
+              "kind": "visit",
+              "id": "4870f158-3c25-4224-adfa-e234ae45ae41",
+              "quantity": 1
+            },
+            {
+              "kind": "service",
+              "id": "ccdb86ec-74a7-4ef3-900c-38b38e8abd17",
+              "quantity": 1
+            }
+          ],
+          "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.538395+00:00"
+        }
+      ]
+    }
+  },
+  "offers": {
+    "c7f28cfc-c67a-4ea7-9903-bde721a74325": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Pakiet indywidualny",
+          "description": "Warunki indywidualne.",
+          "target": {
+            "kind": "package",
+            "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd"
+          },
+          "audience": "individual",
+          "min_participants": 1,
+          "max_participants": 1,
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-12-31",
+          "id": "c7f28cfc-c67a-4ea7-9903-bde721a74325",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.540517+00:00",
+          "snapshot": {
+            "name": "Katedra i wieża z transferem",
+            "description": "Zestaw produktów i usług.",
+            "items": [
+              {
+                "kind": "visit",
+                "id": "349f2965-d763-4f37-9b64-744ae195b3ab",
+                "quantity": 1
+              },
+              {
+                "kind": "visit",
+                "id": "4870f158-3c25-4224-adfa-e234ae45ae41",
+                "quantity": 1
+              },
+              {
+                "kind": "service",
+                "id": "ccdb86ec-74a7-4ef3-900c-38b38e8abd17",
+                "quantity": 1
+              }
+            ],
+            "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd",
+            "version": 1,
+            "saved_at": "2026-11-03T13:40:06.538395+00:00",
+            "kind": "package",
+            "item_snapshots": [
+              {
+                "quantity": 1,
+                "snapshot": {
+                  "name": "Katedra z przewodnikiem",
+                  "description": "Wariant oprowadzania.",
+                  "attraction_id": "dc783ebc-889f-4518-8120-54f1e0094963",
+                  "mode": "guided",
+                  "duration_minutes": 60,
+                  "admission_included": true,
+                  "language": "pl",
+                  "meeting_point": "Do ustalenia",
+                  "id": "349f2965-d763-4f37-9b64-744ae195b3ab",
+                  "version": 1,
+                  "saved_at": "2026-11-03T13:40:06.524160+00:00",
+                  "kind": "visit",
+                  "attraction_snapshot": {
+                    "name": "Katedra Wawelska",
+                    "description": "Wnętrze Katedry, bez wejścia na wieżę.",
+                    "location": "Wawel",
+                    "category": "interior",
+                    "tags": [
+                      "historia",
+                      "religia"
+                    ],
+                    "accessibility_note": "Warunki wymagają sprawdzenia",
+                    "stroller_allowed": null,
+                    "large_luggage_allowed": null,
+                    "closures": [],
+                    "id": "dc783ebc-889f-4518-8120-54f1e0094963",
+                    "version": 1,
+                    "saved_at": "2026-11-03T13:40:06.516128+00:00"
+                  }
+                }
+              },
+              {
+                "quantity": 1,
+                "snapshot": {
+                  "name": "Wejście na wieżę",
+                  "description": "Produkt zwiedzania wieży.",
+                  "attraction_id": "0605b00d-3fc8-4e9a-8ddc-97d19ea8d130",
+                  "mode": "self_guided",
+                  "duration_minutes": 20,
+                  "admission_included": true,
+                  "language": "pl",
+                  "meeting_point": "Do ustalenia",
+                  "id": "4870f158-3c25-4224-adfa-e234ae45ae41",
+                  "version": 1,
+                  "saved_at": "2026-11-03T13:40:06.526556+00:00",
+                  "kind": "visit",
+                  "attraction_snapshot": {
+                    "name": "Dzwon Zygmunta",
+                    "description": "Osobny punkt zwiedzania wieży.",
+                    "location": "Wawel",
+                    "category": "interior",
+                    "tags": [],
+                    "accessibility_note": "Schody",
+                    "stroller_allowed": false,
+                    "large_luggage_allowed": null,
+                    "closures": [],
+                    "id": "0605b00d-3fc8-4e9a-8ddc-97d19ea8d130",
+                    "version": 1,
+                    "saved_at": "2026-11-03T13:40:06.520077+00:00"
+                  }
+                }
+              },
+              {
+                "quantity": 1,
+                "snapshot": {
+                  "name": "Transfer hotel Wawel",
+                  "description": "Przykład usługi bez atrakcji.",
+                  "service_type": "transfer",
+                  "details": {
+                    "pickup": "Hotel",
+                    "destination": "Wawel"
+                  },
+                  "closures": [],
+                  "id": "ccdb86ec-74a7-4ef3-900c-38b38e8abd17",
+                  "version": 1,
+                  "saved_at": "2026-11-03T13:40:06.533848+00:00",
+                  "kind": "service"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "1c68c9a9-5017-4f66-9d60-dbaba7608f5a": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Pakiet grupowy",
+          "description": "Ten sam pakiet, inna oferta.",
+          "target": {
+            "kind": "package",
+            "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd"
+          },
+          "audience": "group",
+          "min_participants": 2,
+          "max_participants": 30,
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-12-31",
+          "id": "1c68c9a9-5017-4f66-9d60-dbaba7608f5a",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.549568+00:00",
+          "snapshot": {
+            "name": "Katedra i wieża z transferem",
+            "description": "Zestaw produktów i usług.",
+            "items": [
+              {
+                "kind": "visit",
+                "id": "349f2965-d763-4f37-9b64-744ae195b3ab",
+                "quantity": 1
+              },
+              {
+                "kind": "visit",
+                "id": "4870f158-3c25-4224-adfa-e234ae45ae41",
+                "quantity": 1
+              },
+              {
+                "kind": "service",
+                "id": "ccdb86ec-74a7-4ef3-900c-38b38e8abd17",
+                "quantity": 1
+              }
+            ],
+            "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd",
+            "version": 1,
+            "saved_at": "2026-11-03T13:40:06.538395+00:00",
+            "kind": "package",
+            "item_snapshots": [
+              {
+                "quantity": 1,
+                "snapshot": {
+                  "name": "Katedra z przewodnikiem",
+                  "description": "Wariant oprowadzania.",
+                  "attraction_id": "dc783ebc-889f-4518-8120-54f1e0094963",
+                  "mode": "guided",
+                  "duration_minutes": 60,
+                  "admission_included": true,
+                  "language": "pl",
+                  "meeting_point": "Do ustalenia",
+                  "id": "349f2965-d763-4f37-9b64-744ae195b3ab",
+                  "version": 1,
+                  "saved_at": "2026-11-03T13:40:06.524160+00:00",
+                  "kind": "visit",
+                  "attraction_snapshot": {
+                    "name": "Katedra Wawelska",
+                    "description": "Wnętrze Katedry, bez wejścia na wieżę.",
+                    "location": "Wawel",
+                    "category": "interior",
+                    "tags": [
+                      "historia",
+                      "religia"
+                    ],
+                    "accessibility_note": "Warunki wymagają sprawdzenia",
+                    "stroller_allowed": null,
+                    "large_luggage_allowed": null,
+                    "closures": [],
+                    "id": "dc783ebc-889f-4518-8120-54f1e0094963",
+                    "version": 1,
+                    "saved_at": "2026-11-03T13:40:06.516128+00:00"
+                  }
+                }
+              },
+              {
+                "quantity": 1,
+                "snapshot": {
+                  "name": "Wejście na wieżę",
+                  "description": "Produkt zwiedzania wieży.",
+                  "attraction_id": "0605b00d-3fc8-4e9a-8ddc-97d19ea8d130",
+                  "mode": "self_guided",
+                  "duration_minutes": 20,
+                  "admission_included": true,
+                  "language": "pl",
+                  "meeting_point": "Do ustalenia",
+                  "id": "4870f158-3c25-4224-adfa-e234ae45ae41",
+                  "version": 1,
+                  "saved_at": "2026-11-03T13:40:06.526556+00:00",
+                  "kind": "visit",
+                  "attraction_snapshot": {
+                    "name": "Dzwon Zygmunta",
+                    "description": "Osobny punkt zwiedzania wieży.",
+                    "location": "Wawel",
+                    "category": "interior",
+                    "tags": [],
+                    "accessibility_note": "Schody",
+                    "stroller_allowed": false,
+                    "large_luggage_allowed": null,
+                    "closures": [],
+                    "id": "0605b00d-3fc8-4e9a-8ddc-97d19ea8d130",
+                    "version": 1,
+                    "saved_at": "2026-11-03T13:40:06.520077+00:00"
+                  }
+                }
+              },
+              {
+                "quantity": 1,
+                "snapshot": {
+                  "name": "Transfer hotel Wawel",
+                  "description": "Przykład usługi bez atrakcji.",
+                  "service_type": "transfer",
+                  "details": {
+                    "pickup": "Hotel",
+                    "destination": "Wawel"
+                  },
+                  "closures": [],
+                  "id": "ccdb86ec-74a7-4ef3-900c-38b38e8abd17",
+                  "version": 1,
+                  "saved_at": "2026-11-03T13:40:06.533848+00:00",
+                  "kind": "service"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "99041ba2-179e-4d7e-959c-d7d80383de8e": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Samodzielna Katedra",
+          "description": "Oferta jednego produktu.",
+          "target": {
+            "kind": "visit",
+            "id": "0382a115-5428-4b74-90e6-f68282642a74"
+          },
+          "audience": "individual",
+          "min_participants": 1,
+          "max_participants": 1,
+          "valid_from": null,
+          "valid_to": null,
+          "id": "99041ba2-179e-4d7e-959c-d7d80383de8e",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.554522+00:00",
+          "snapshot": {
+            "name": "Katedra samodzielnie",
+            "description": "Inny produkt tego samego miejsca.",
+            "attraction_id": "dc783ebc-889f-4518-8120-54f1e0094963",
+            "mode": "self_guided",
+            "duration_minutes": 45,
+            "admission_included": true,
+            "language": "pl",
+            "meeting_point": "Do ustalenia",
+            "id": "0382a115-5428-4b74-90e6-f68282642a74",
+            "version": 1,
+            "saved_at": "2026-11-03T13:40:06.525330+00:00",
+            "kind": "visit",
+            "attraction_snapshot": {
+              "name": "Katedra Wawelska",
+              "description": "Wnętrze Katedry, bez wejścia na wieżę.",
+              "location": "Wawel",
+              "category": "interior",
+              "tags": [
+                "historia",
+                "religia"
+              ],
+              "accessibility_note": "Warunki wymagają sprawdzenia",
+              "stroller_allowed": null,
+              "large_luggage_allowed": null,
+              "closures": [],
+              "id": "dc783ebc-889f-4518-8120-54f1e0094963",
+              "version": 1,
+              "saved_at": "2026-11-03T13:40:06.516128+00:00"
+            }
+          }
+        }
+      ]
+    },
+    "fb912fd1-bbf5-4a1b-a377-3f24086ee406": {
+      "archived": false,
+      "versions": [
+        {
+          "name": "Ubezpieczenie osobno",
+          "description": "Oferta bez lokalizacji.",
+          "target": {
+            "kind": "service",
+            "id": "77a4edb6-a0fa-4aac-970a-7d4f4df629bd"
+          },
+          "audience": "individual",
+          "min_participants": 1,
+          "max_participants": 1,
+          "valid_from": null,
+          "valid_to": null,
+          "id": "fb912fd1-bbf5-4a1b-a377-3f24086ee406",
+          "version": 1,
+          "saved_at": "2026-11-03T13:40:06.559279+00:00",
+          "snapshot": {
+            "name": "Ubezpieczenie",
+            "description": "Dydaktyczna usługa dodatkowa.",
+            "service_type": "insurance",
+            "details": {
+              "coverage": "Zakres przykładowy"
+            },
+            "closures": [],
+            "id": "77a4edb6-a0fa-4aac-970a-7d4f4df629bd",
+            "version": 1,
+            "saved_at": "2026-11-03T13:40:06.535856+00:00",
+            "kind": "service"
+          }
+        }
+      ]
+    }
+  }
+}
