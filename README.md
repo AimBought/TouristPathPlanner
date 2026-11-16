@@ -1,18 +1,18 @@
-# Atrakcje atomowe i oferty
+# Atrakcje atomowe, oferty i pakiety
 
 Backend w Pythonie 3.10+, bez zewnętrznych bibliotek i bazy danych. Stan jest zapisany w `data/catalog.json` w UTF-8. Punktem wyjścia są jawne struktury w `models.py`, zdefiniowane jako klasy `dataclass`.
 
 ## Najważniejsze rozróżnienie
 
-**Atrakcja atomowa** jest miejscem, **produkt zwiedzania** określa sposób zwiedzania tego miejsca, **pakiet** łączy produkty i usługi, a **oferta** określa warunki zaoferowania produktu lub pakietu.
+**Atrakcja atomowa** jest miejscem, **produkt zwiedzania** określa sposób zwiedzania tego miejsca, **oferta** łączy produkty i usługi, a **pakiet** określa warunki zaoferowania produktu lub oferty.
 
 Przykład:
 
 - Jedna atrakcja: wnętrze Katedry, z wyraźnym wyłączeniem wieży z jej zakresu.
 - Dwa produkty wskazujące tę samą atrakcję: oprowadzanie i zwiedzanie samodzielne.
 - Osobna atrakcja: Dzwon Zygmunta, z własnymi ograniczeniami i wyłączeniami.
-- Pakiet: oprowadzanie po wnętrzu Katedry + wejście na wieżę + transfer.
-- Dwie oferty tego samego pakietu: indywidualna i grupowa, z różnymi warunkami liczby uczestników.
+- Oferta: oprowadzanie po wnętrzu Katedry + wejście na wieżę + transfer.
+- Dwa pakiety zawierające tę samą ofertę: indywidualny i grupowy, z różnymi warunkami liczby uczestników.
 
 Atomowość oznacza najmniejszą jednostkę, którą w tym modelu opisujemy i wyłączamy niezależnie. Granice atomów ustala zespół, tak aby ich opisy nie obejmowały niejawnie tych samych części. Nie muszą odpowiadać pojedynczemu biletowi. Program nie wnioskuje z nazw o nakładaniu się zakresów. Katedra i wieża w danych demonstracyjnych mają rozłączne opisy, mimo że są przestrzennie powiązane.
 
@@ -23,10 +23,10 @@ Atomowość oznacza najmniejszą jednostkę, którą w tym modelu opisujemy i wy
 | `AtomicAttraction` / `attractions` | name, description, location, category, tags, ograniczenia, closures | Nie zawiera innych atrakcji |
 | `VisitProduct` / `visits` | attraction_id, mode, duration_minutes, admission_included, language, meeting_point | Dokładnie jedna atrakcja; wiele produktów może wskazywać ten sam atom |
 | `AdditionalService` / `services` | service_type, details, closures | Usługa bez wymaganej atrakcji, np. transfer lub ubezpieczenie |
-| `Package` / `packages` | items | Zbiór produktów, usług i ewentualnie podpakietów |
-| `Offer` / `offers` | target, audience, min_participants, max_participants, valid_from, valid_to | Jedna oferta wskazuje jeden produkt, usługę lub pakiet; cel może mieć wiele ofert |
-| `Reference` | kind, id | Jednoznaczna referencja do visit, service albo package |
-| `PackageItem` | kind, id, quantity | Składnik pakietu z dodatnią ilością |
+| `Offer` / `offers` | items | Zbiór produktów, usług i ewentualnie podofert |
+| `Package` / `packages` | target, audience, min_participants, max_participants, valid_from, valid_to | Pakiet wskazuje ofertę, produkt lub usługę; ta sama oferta może wchodzić w skład wielu pakietów |
+| `Reference` | kind, id | Jednoznaczna referencja do visit, service albo offer |
+| `OfferItem` | kind, id, quantity | Składnik oferty z dodatnią ilością |
 | `Closure` | start, end, reason | Czasowe wyłączenie atrakcji lub usługi |
 
 `id`, `version` i `saved_at` dodaje katalog przy zapisie. Klasy reprezentują właściwą treść domenową, a powyższe pola metadane wersji. W JSON każda kolekcja jest mapą identyfikatorów do rekordów `{archived, versions}`. Każdy element `versions` zawiera pełną treść danej wersji.
@@ -48,10 +48,10 @@ Odczyty można wykonywać z przeglądarki:
 - http://127.0.0.1:8000/attractions
 - http://127.0.0.1:8000/visits
 - http://127.0.0.1:8000/services
-- http://127.0.0.1:8000/packages
 - http://127.0.0.1:8000/offers
+- http://127.0.0.1:8000/packages
 
-To API JSON. Dodawanie i edycję wykonuj klientem HTTP, np. PowerShellem albo Postmanem. Domyślny plik ma dane dydaktyczne: 3 atrakcje, 4 produkty zwiedzania, 2 usługi, 1 pakiet i 4 oferty. Nie są to aktualne warunki sprzedaży Wawelu.
+To API JSON. Dodawanie i edycję wykonuj klientem HTTP, np. PowerShellem albo Postmanem. Domyślny plik ma dane dydaktyczne: 3 atrakcje, 4 produkty zwiedzania, 2 usługi, 1 ofertę i 4 pakiety. Nie są to aktualne warunki sprzedaży Wawelu.
 
 Aby zacząć z pustym katalogiem, użyj nowego pliku:
 
@@ -59,7 +59,7 @@ Aby zacząć z pustym katalogiem, użyj nowego pliku:
 python server.py --data data/moj_katalog.json --port 8001
 ```
 
-Nieistniejący plik powstanie przy pierwszym zapisie. `python seed.py` tworzy przykłady w pustym domyślnym katalogu; odmawia nadpisania katalogu zawierającego dane. Wcześniejsza wersja projektu używała schematu 1 z ogólnym `products`. Ten projekt używa schematu 2 z osobnymi strukturami. Starego JSON nie migruje automatycznie i go nie nadpisuje; użyj nowego pliku lub dołączonych danych.
+Nieistniejący plik powstanie przy pierwszym zapisie. `python seed.py` tworzy przykłady w pustym domyślnym katalogu; odmawia nadpisania katalogu zawierającego dane. Projekt obsługuje wyłącznie schemat 3: dawne pakiety nazywają się ofertami, a dawne oferty pakietami. Starsze schematy nie są automatycznie migrowane; użyj nowego pliku lub dołączonych danych.
 
 ## Przykładowe treści żądań
 
@@ -112,7 +112,7 @@ Tryby: `guided`, `self_guided`, `audio`, `exterior`. Samo wspomnienie obiektu w 
 }
 ```
 
-### 4. Pakiet przez POST /packages
+### 4. Oferta przez POST /offers
 
 ```json
 {
@@ -125,15 +125,15 @@ Tryby: `guided`, `self_guided`, `audio`, `exterior`. Samo wspomnienie obiektu w 
 }
 ```
 
-`quantity` oznacza liczbę jednostek danego składnika w definicji pakietu. Nie jest pulą miejsc ani mechanizmem rezerwacji. Uczestników opisuje osobno oferta.
+`quantity` oznacza liczbę jednostek danego składnika w definicji oferty. Nie jest pulą miejsc ani mechanizmem rezerwacji. Uczestników opisuje osobno pakiet.
 
-### 5. Oferta przez POST /offers
+### 5. Pakiet przez POST /packages
 
 ```json
 {
   "name": "Pakiet grupowy",
-  "description": "Oferta dla grupy od 2 do 30 osób",
-  "target": {"kind": "package", "id": "PACKAGE_ID"},
+  "description": "Pakiet dla grupy od 2 do 30 osób",
+  "target": {"kind": "offer", "id": "OFFER_ID"},
   "audience": "group",
   "min_participants": 2,
   "max_participants": 30,
@@ -142,7 +142,7 @@ Tryby: `guided`, `self_guided`, `audio`, `exterior`. Samo wspomnienie obiektu w 
 }
 ```
 
-Oferta nie jest miejscem i nie zawiera ad hoc drugiej definicji pakietu. Wieloskładnikowy zestaw najpierw zapisujemy jako `Package`. Dla pojedynczego produktu wystarczy `target` o `kind: visit` albo `service`. Daty są włączne. Brak granicy (`null`) oznacza brak ograniczenia z tej strony.
+Pakiet nie jest miejscem i nie zawiera ad hoc drugiej definicji oferty. Wieloskładnikowy zestaw najpierw zapisujemy jako `Offer`. Dla pojedynczego produktu wystarczy `target` o `kind: visit` albo `service`. Daty są włączne. Brak granicy (`null`) oznacza brak ograniczenia z tej strony.
 
 ## Edycja i historia
 
@@ -159,17 +159,17 @@ Każde utworzenie i edycja dowolnej struktury tworzy kolejną wersję. Użyj `PA
 
 `expected_version` chroni przed zapisem opartej na nieaktualnej wersji edycji. Listy i obiekty wewnętrzne, np. `items`, `target` i `closures`, są zastępowane w całości, nie scalane element po elemencie.
 
-Przy zapisie oferty system zamraża jej cel w `snapshot`: kopiuje produkty, skład pakietu i wszystkie wskazane atomy. Edycja atrakcji, produktu czy pakietu nie zmienia starej treści oferty. Edycja samej oferty tworzy nową wersję oraz odświeża kopię celu do jego obecnego stanu.
+Przy zapisie pakietu system zamraża jego cel w `snapshot`: kopiuje produkty, skład oferty i wszystkie wskazane atomy. Edycja atrakcji, produktu czy oferty nie zmienia starej treści pakietu. Edycja samego pakietu tworzy nową wersję oraz odświeża kopię celu do jego obecnego stanu.
 
-Operacyjne zamknięcia działają niezależnie od zamrożonych opisów: sprawdzenie dostępności bierze bieżące `closures` i archiwizację atomów i usług. Dzięki temu zamknięcie Katedry blokuje wszystkie oferty zawierające jej produkty, bez edytowania każdej oferty osobno. Skład brany jest z kopii danej oferty, więc późniejsza zmiana definicji pakietu nie zmienia jej zakresu.
+Operacyjne zamknięcia działają niezależnie od zamrożonych opisów: sprawdzenie dostępności bierze bieżące `closures` i archiwizację atomów i usług. Dzięki temu zamknięcie Katedry blokuje wszystkie pakiety zawierające jej produkty, bez edytowania każdego pakietu osobno. Skład brany jest z kopii danego pakietu, więc późniejsza zmiana definicji oferty nie zmienia jego zakresu.
 
 Jeden niedostępny składnik oznacza niedostępność całego pakietu. System nie usuwa go samodzielnie ani nie przelicza zastępstw. Zapytanie o datę przeszłą sprawdza obecną wiedzę o wyłączeniach; nie odtwarza historycznego stanu operacyjnego.
 
-`DELETE` archiwizuje i zachowuje wersje. Archiwizacja dowolnego obiektu użytego w kopii oferty powoduje niedostępność tej oferty. Nowe oferty nie mogą utrwalać archiwalnych zależności. Lista zwraca również obiekty archiwalne z flagą `archived`.
+`DELETE` archiwizuje i zachowuje wersje. Archiwizacja dowolnego obiektu użytego w kopii pakietu powoduje niedostępność tego pakietu. Nowe pakiety nie mogą utrwalać archiwalnych zależności. Lista zwraca również obiekty archiwalne z flagą `archived`.
 
 ## API
 
-`{collection}` to `attractions`, `visits`, `services`, `packages` albo `offers`.
+`{collection}` to `attractions`, `visits`, `services`, `offers` albo `packages`.
 
 | Metoda | Ścieżka | Wynik |
 |---|---|---|
@@ -181,7 +181,7 @@ Jeden niedostępny składnik oznacza niedostępność całego pakietu. System ni
 | DELETE | `/{collection}/{id}` | Archiwizacja, JSON z expected_version |
 | GET | `/{collection}/{id}/versions` | Historia |
 | GET | `/{collection}/{id}/versions/{version}` | Wybrana wersja |
-| GET | `/offers/{id}/availability?date=2026-11-03` | Status, dostępność i przyczyny |
+| GET | `/packages/{id}/availability?date=2026-11-03` | Status, dostępność i przyczyny |
 
 Domyślna data sprawdzenia to lokalna data komputera serwera. Statusy: `current`, `planned`, `expired`, `archived`. Status `current` nie oznacza dostępności przy czasowym wyłączeniu. Brak wyszukiwarki i filtrowania.
 
@@ -196,9 +196,11 @@ $atom = @{ name='Katedra'; description='Wnetrze bez wiezy'; location='Wawel' } |
 $a = Invoke-RestMethod http://127.0.0.1:8000/attractions -Method Post -ContentType 'application/json; charset=utf-8' -Body $atom
 $visit = @{ name='Zwiedzanie'; description='Oprowadzanie'; attraction_id=$a.id; mode='guided'; duration_minutes=60; admission_included=$true } | ConvertTo-Json
 $v = Invoke-RestMethod http://127.0.0.1:8000/visits -Method Post -ContentType 'application/json; charset=utf-8' -Body $visit
-$offer = @{ name='Oferta'; description='Warunki indywidualne'; target=@{kind='visit'; id=$v.id} } | ConvertTo-Json -Depth 5
+$offer = @{ name='Oferta zwiedzania'; description='Sklad oferty'; items=@(@{kind='visit'; id=$v.id; quantity=1}) } | ConvertTo-Json -Depth 5
 $o = Invoke-RestMethod http://127.0.0.1:8000/offers -Method Post -ContentType 'application/json; charset=utf-8' -Body $offer
-Invoke-RestMethod "http://127.0.0.1:8000/offers/$($o.id)/availability?date=2026-11-03"
+$package = @{ name='Pakiet'; description='Warunki indywidualne'; target=@{kind='offer'; id=$o.id} } | ConvertTo-Json -Depth 5
+$p = Invoke-RestMethod http://127.0.0.1:8000/packages -Method Post -ContentType 'application/json; charset=utf-8' -Body $package
+Invoke-RestMethod "http://127.0.0.1:8000/packages/$($p.id)/availability?date=2026-11-03"
 ```
 
 ## Demo i testy
@@ -208,7 +210,7 @@ python demo.py
 python -m unittest discover -s tests -v
 ```
 
-Demo pokazuje struktury, ich połączenia i wpływ zamknięcia atomu na ofertę. Pracuje w pliku tymczasowym i nie zmienia `data/catalog.json`. Testy także nie zmieniają danych projektu.
+Demo pokazuje struktury, ich połączenia i wpływ zamknięcia atomu na pakiet. Pracuje w pliku tymczasowym i nie zmienia `data/catalog.json`. Testy także nie zmieniają danych projektu.
 
 ## Pliki i ograniczenia
 
@@ -218,6 +220,6 @@ Demo pokazuje struktury, ich połączenia i wpływ zamknięcia atomu na ofertę.
 - `server.py`: lokalne API HTTP.
 - `seed.py`, `demo.py`: dane przykładowe i scenariusz demonstracyjny.
 
-Jeden proces na plik danych. Równoległe żądania w jego obrębie są synchronizowane; kilka procesów nie ma wspólnej blokady. Nie edytuj pliku ręcznie podczas pracy serwera. Uszkodzony JSON lub schemat 1 powoduje błąd, nie automatyczny reset danych.
+Jeden proces na plik danych. Równoległe żądania w jego obrębie są synchronizowane; kilka procesów nie ma wspólnej blokady. Nie edytuj pliku ręcznie podczas pracy serwera. Uszkodzony JSON lub schemat inny niż 3 powoduje błąd, nie automatyczny reset danych.
 
-API nasłuchuje wyłącznie na 127.0.0.1. To backend dydaktyczny bez logowania, sprzedaży, rezerwacji, cen i planowania tras. Nie zawiera grafiku godzin otwarcia, cyklicznych reguł kalendarza ani silnika realizacji usług. Daty ofert i listy czasowych wyłączeń stanowią zaimplementowany zakres dostępności.
+API nasłuchuje wyłącznie na 127.0.0.1. To backend dydaktyczny bez logowania, sprzedaży, rezerwacji, cen i planowania tras. Nie zawiera grafiku godzin otwarcia, cyklicznych reguł kalendarza ani silnika realizacji usług. Daty pakietów i listy czasowych wyłączeń stanowią zaimplementowany zakres dostępności.

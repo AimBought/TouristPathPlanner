@@ -51,12 +51,12 @@ class Reference:
     id: str
 
     def __post_init__(self):
-        check(self.kind in {"visit", "service", "package"}, "kind: visit, service albo package")
+        check(self.kind in {"visit", "service", "offer"}, "kind: visit, service albo offer")
         string(self.id, "id")
 
 
 @dataclass(frozen=True)
-class PackageItem(Reference):
+class OfferItem(Reference):
     quantity: int = 1
 
     def __post_init__(self):
@@ -89,7 +89,7 @@ class AtomicAttraction:
 
 @dataclass(frozen=True)
 class VisitProduct:
-    """Sposób zwiedzania jednej atrakcji. Wiele miejsc łączymy przez Package."""
+    """Sposób zwiedzania jednej atrakcji. Wiele miejsc łączymy przez Offer."""
     name: str
     description: str
     attraction_id: str
@@ -124,21 +124,22 @@ class AdditionalService:
 
 
 @dataclass(frozen=True)
-class Package:
+class Offer:
+    """Zestaw produktów i usług; oferta może być składnikiem pakietu."""
     name: str
     description: str
-    items: list[PackageItem]
+    items: list[OfferItem]
 
     def __post_init__(self):
         string(self.name, "name"); string(self.description, "description")
-        check(bool(self.items), "Pakiet wymaga co najmniej jednego składnika")
+        check(bool(self.items), "Oferta wymaga co najmniej jednego składnika")
         refs = [(x.kind, x.id) for x in self.items]
         check(len(refs) == len(set(refs)), "Powtórzony składnik; użyj quantity")
 
 
 @dataclass(frozen=True)
-class Offer:
-    """Warunki zaoferowania jednego produktu albo gotowego pakietu."""
+class Package:
+    """Pakiet wskazuje ofertę lub pojedynczy produkt i określa warunki udziału."""
     name: str
     description: str
     target: Reference
@@ -157,8 +158,8 @@ class Offer:
 
 
 MODELS = {"attractions": AtomicAttraction, "visits": VisitProduct,
-          "services": AdditionalService, "packages": Package, "offers": Offer}
-REF_COLLECTION = {"visit": "visits", "service": "services", "package": "packages"}
+          "services": AdditionalService, "offers": Offer, "packages": Package}
+REF_COLLECTION = {"visit": "visits", "service": "services", "offer": "offers"}
 
 
 def parse_model(collection, body):
@@ -170,10 +171,10 @@ def parse_model(collection, body):
             check(collection in {"attractions", "services"} and isinstance(data["closures"], list),
                   "closures dozwolone jako lista dla atrakcji i usług")
             data["closures"] = [Closure(**item) for item in data["closures"]]
-        if collection == "packages":
-            check(isinstance(data.get("items"), list), "items musi być listą")
-            data["items"] = [PackageItem(**item) for item in data["items"]]
         if collection == "offers":
+            check(isinstance(data.get("items"), list), "items musi być listą")
+            data["items"] = [OfferItem(**item) for item in data["items"]]
+        if collection == "packages":
             check(isinstance(data.get("target"), dict), "target musi być referencją {kind, id}")
             data["target"] = Reference(**data["target"])
         return MODELS[collection](**data)

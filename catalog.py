@@ -31,21 +31,21 @@ class Catalog:
     def _validate_links(self, data, collection, identity, model):
         if collection == "visits":
             active(data, "attractions", model.attraction_id)
-        if collection == "packages":
+        if collection == "offers":
             # Graf zawierania: różne produkty mogą wskazywać tę samą atrakcję.
             def walk(ref, path):
-                check((ref.kind, ref.id) not in path, "Cykl w składzie pakietów")
+                check((ref.kind, ref.id) not in path, "Cykl w składzie ofert")
                 target_collection = REF_COLLECTION[ref.kind]
-                if target_collection == "packages" and ref.id == identity:
+                if target_collection == "offers" and ref.id == identity:
                     children = model.items
                 else:
                     target = active(data, target_collection, ref.id)
-                    children = target["items"] if ref.kind == "package" else []
+                    children = target["items"] if ref.kind == "offer" else []
                     children = [Reference(x["kind"], x["id"]) for x in children]
                 for child in children:
                     walk(child, path | {(ref.kind, ref.id)})
-            walk(Reference("package", identity), set())
-        if collection == "offers":
+            walk(Reference("offer", identity), set())
+        if collection == "packages":
             self._snapshot(data, model.target)
 
     def _snapshot(self, data, ref):
@@ -54,7 +54,7 @@ class Catalog:
         result["kind"] = ref.kind
         if ref.kind == "visit":
             result["attraction_snapshot"] = deepcopy(active(data, "attractions", result["attraction_id"]))
-        if ref.kind == "package":
+        if ref.kind == "offer":
             result["item_snapshots"] = [
                 {"quantity": item["quantity"], "snapshot": self._snapshot(data, Reference(item["kind"], item["id"]))}
                 for item in result["items"]]
@@ -82,7 +82,7 @@ class Catalog:
             result = asdict(model)
             result.update(id=object_id, version=len(item["versions"]) + 1,
                           saved_at=datetime.now(timezone.utc).isoformat())
-            if collection == "offers":
+            if collection == "packages":
                 result["snapshot"] = self._snapshot(data, model.target)
             item["versions"].append(result)
             data[collection][object_id] = item
@@ -120,12 +120,12 @@ class Catalog:
     def availability(self, identity, at):
         iso_date(at)
         data = self.store.read()
-        item = get_record(data, "offers", identity)
-        offer = item["versions"][-1]
+        item = get_record(data, "packages", identity)
+        package = item["versions"][-1]
         status = ("archived" if item["archived"] else
-                  "planned" if offer["valid_from"] and at < offer["valid_from"] else
-                  "expired" if offer["valid_to"] and at > offer["valid_to"] else "current")
-        reasons = [] if status == "current" else ["Status oferty: " + status]
+                  "planned" if package["valid_from"] and at < package["valid_from"] else
+                  "expired" if package["valid_to"] and at > package["valid_to"] else "current")
+        reasons = [] if status == "current" else ["Status pakietu: " + status]
         seen = set()
         def inspect(collection, snapshot):
             key = (collection, snapshot["id"])
@@ -144,6 +144,6 @@ class Catalog:
                 inspect("attractions", snapshot["attraction_snapshot"])
             for child in snapshot.get("item_snapshots", []):
                 walk(child["snapshot"])
-        walk(offer["snapshot"])
-        return {"offer_id": identity, "date": at, "status": status,
+        walk(package["snapshot"])
+        return {"package_id": identity, "date": at, "status": status,
                 "available": not reasons, "reasons": reasons}

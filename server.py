@@ -63,7 +63,7 @@ def handler_for(catalog):
                     except ValueError:
                         raise Error("Nieprawidłowy numer wersji")
                     return 200, catalog.get(collection, parts[1], version)
-                if collection == "offers" and len(parts) == 3 and parts[2] == "availability":
+                if collection == "packages" and len(parts) == 3 and parts[2] == "availability":
                     at = query.get("date", [date.today().isoformat()])[0]
                     return 200, catalog.availability(parts[1], at)
             if method == "POST" and len(parts) == 1:
@@ -92,7 +92,7 @@ def handler_for(catalog):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Atrakcje atomowe i oferty z zapisem JSON")
+    parser = argparse.ArgumentParser(description="Atrakcje atomowe, oferty i pakiety z zapisem JSON")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--data", default=str(Path(__file__).parent / "data" / "catalog.json"))
     args = parser.parse_args()

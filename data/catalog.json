@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "attractions": {
     "dc783ebc-889f-4518-8120-54f1e0094963": {
       "archived": false,
@@ -173,7 +173,7 @@
       ]
     }
   },
-  "packages": {
+  "offers": {
     "949de9f4-af6a-403e-9f88-0d90e3a3f8cd": {
       "archived": false,
       "versions": [
@@ -204,7 +204,7 @@
       ]
     }
   },
-  "offers": {
+  "packages": {
     "c7f28cfc-c67a-4ea7-9903-bde721a74325": {
       "archived": false,
       "versions": [
@@ -212,7 +212,7 @@
           "name": "Pakiet indywidualny",
           "description": "Warunki indywidualne.",
           "target": {
-            "kind": "package",
+            "kind": "offer",
             "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd"
           },
           "audience": "individual",
@@ -246,7 +246,7 @@
             "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd",
             "version": 1,
             "saved_at": "2026-11-03T13:40:06.538395+00:00",
-            "kind": "package",
+            "kind": "offer",
             "item_snapshots": [
               {
                 "quantity": 1,
@@ -342,7 +342,7 @@
           "name": "Pakiet grupowy",
           "description": "Ten sam pakiet, inna oferta.",
           "target": {
-            "kind": "package",
+            "kind": "offer",
             "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd"
           },
           "audience": "group",
@@ -376,7 +376,7 @@
             "id": "949de9f4-af6a-403e-9f88-0d90e3a3f8cd",
             "version": 1,
             "saved_at": "2026-11-03T13:40:06.538395+00:00",
-            "kind": "package",
+            "kind": "offer",
             "item_snapshots": [
               {
                 "quantity": 1,

@@ -16,13 +16,13 @@ class JsonStore:
 
     def _read(self):
         if not self.path.exists():
-            return {"schema_version": 2, **{key: {} for key in MODELS}}
+            return {"schema_version": 3, **{key: {} for key in MODELS}}
         try:
             data = json.loads(self.path.read_text(encoding="utf-8"))
-            if data.get("schema_version") != 2 or any(not isinstance(data.get(key), dict) for key in MODELS):
+            if data.get("schema_version") != 3 or any(not isinstance(data.get(key), dict) for key in MODELS):
                 raise ValueError("Inna wersja schematu")
             return data
-        except (ValueError, AttributeError) as exc:
+        except (ValueError, AttributeError, KeyError, TypeError) as exc:
             raise RuntimeError("Niepoprawny plik lub stary schemat. Plik nie został nadpisany.") from exc
 
     def read(self):
