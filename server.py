@@ -1,4 +1,4 @@
-"""Lokalne API HTTP bez zewnętrznych bibliotek."""
+"""Lokalna strona i API HTTP bez zewnętrznych bibliotek."""
 import argparse
 import json
 import logging
@@ -12,15 +12,31 @@ from models import MODELS, DomainError as Error
 from storage import JsonStore
 
 
+STATIC_DIRECTORY = Path(__file__).parent / "static"
+STATIC_FILES = {
+    "/": ("index.html", "text/html; charset=utf-8"),
+    "/index.html": ("index.html", "text/html; charset=utf-8"),
+    "/admin": ("index.html", "text/html; charset=utf-8"),
+    "/admin/": ("index.html", "text/html; charset=utf-8"),
+    "/static/styles.css": ("styles.css", "text/css; charset=utf-8"),
+    "/static/app.js": ("app.js", "text/javascript; charset=utf-8"),
+}
+
+
 def handler_for(catalog):
     class Handler(BaseHTTPRequestHandler):
-        def send_json(self, status, body):
-            content = json.dumps(body, ensure_ascii=False, allow_nan=False).encode("utf-8")
+        def send_bytes(self, status, content, content_type):
             self.send_response(status)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(content)))
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Cache-Control", "no-cache")
             self.end_headers()
             self.wfile.write(content)
+
+        def send_json(self, status, body):
+            content = json.dumps(body, ensure_ascii=False, allow_nan=False).encode("utf-8")
+            self.send_bytes(status, content, "application/json; charset=utf-8")
 
         def body(self):
             try:
@@ -44,12 +60,14 @@ def handler_for(catalog):
             parts = parsed.path.strip("/").split("/")
             query = parse_qs(parsed.query)
             method = self.command
-            if method == "GET" and parsed.path in {"/", "/health"}:
+            if method == "GET" and parsed.path == "/health":
                 return 200, {"service": "Ofertowanie", "status": "ok",
                              "collections": ["/" + key for key in MODELS]}
             if not parts or parts[0] not in MODELS:
                 raise Error("Nie znaleziono endpointu", 404)
             collection = parts[0]
+            if method == "POST" and collection == "packages" and parts[1:] == ["from-cart"]:
+                return 201, catalog.create_from_cart(self.body())
             if method == "GET":
                 if len(parts) == 1:
                     return 200, catalog.list(collection)
@@ -79,6 +97,15 @@ def handler_for(catalog):
 
         def handle_request(self):
             try:
+                static = STATIC_FILES.get(urlsplit(self.path).path) if self.command == "GET" else None
+                if static:
+                    filename, content_type = static
+                    try:
+                        content = (STATIC_DIRECTORY / filename).read_bytes()
+                    except FileNotFoundError:
+                        raise Error("Nie znaleziono pliku strony", 404)
+                    self.send_bytes(200, content, content_type)
+                    return
                 status, body = self.dispatch()
             except Error as exc:
                 status, body = exc.status, {"error": str(exc)}
@@ -99,7 +126,7 @@ if __name__ == "__main__":
     service = Catalog(JsonStore(args.data))
     service.store.read()  # Zatrzymaj start przy uszkodzonym pliku zamiast go resetować.
     server = ThreadingHTTPServer(("127.0.0.1", args.port), handler_for(service))
-    print(f"API: http://127.0.0.1:{args.port} | Dane: {args.data}", flush=True)
+    print(f"Strona: http://127.0.0.1:{args.port} | Admin: http://127.0.0.1:{args.port}/admin | Dane: {args.data}", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

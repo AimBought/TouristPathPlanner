@@ -1,6 +1,6 @@
 # Atrakcje atomowe, oferty i pakiety
 
-Backend w Pythonie 3.10+, bez zewnętrznych bibliotek i bazy danych. Stan jest zapisany w `data/catalog.json` w UTF-8. Punktem wyjścia są jawne struktury w `models.py`, zdefiniowane jako klasy `dataclass`.
+Strona z widokiem klienta i admina oraz backend w Pythonie 3.10+, bez zewnętrznych bibliotek i bazy danych. Stan jest zapisany w `data/catalog.json` w UTF-8. Punktem wyjścia są jawne struktury w `models.py`, zdefiniowane jako klasy `dataclass`.
 
 ## Najważniejsze rozróżnienie
 
@@ -43,7 +43,16 @@ python server.py
 
 Windows: można użyć `py server.py`, Linux/WSL: `python3 server.py`.
 
-Odczyty można wykonywać z przeglądarki:
+Otwórz w przeglądarce:
+
+- http://127.0.0.1:8000/ — katalog klienta, koszyk i zapisane pakiety.
+- http://127.0.0.1:8000/admin — zarządzanie katalogiem.
+
+Klient dodaje do koszyka usługi, wizyty i gotowe oferty, ustala ilości i warunki udziału. Zatwierdzenie tworzy nową ofertę ze składem koszyka oraz powiązany pakiet z zamrożoną kopią oferty. Oba rekordy powstają w jednej transakcji; błąd nie zapisuje części wyniku. Roboczy koszyk pozostaje w pamięci przeglądarki po odświeżeniu. Zapisane pakiety można sprawdzać pod kątem dostępności na wybrany dzień.
+
+Admin tworzy, edytuje i archiwizuje atrakcje, wizyty, usługi, oferty oraz pakiety. Formularze pozwalają zmieniać skład ofert i czasowe wyłączenia atrakcji lub usług. Edycja zachowuje wersjonowanie i ochronę przed konfliktem zapisu. Panel admina jest lokalnym widokiem bez logowania; API nie rozdziela uprawnień użytkowników. Serwer nasłuchuje tylko na `127.0.0.1`.
+
+API JSON jest nadal dostępne:
 
 - http://127.0.0.1:8000/attractions
 - http://127.0.0.1:8000/visits
@@ -51,7 +60,7 @@ Odczyty można wykonywać z przeglądarki:
 - http://127.0.0.1:8000/offers
 - http://127.0.0.1:8000/packages
 
-To API JSON. Dodawanie i edycję wykonuj klientem HTTP, np. PowerShellem albo Postmanem. Domyślny plik ma dane dydaktyczne: 3 atrakcje, 4 produkty zwiedzania, 2 usługi, 1 ofertę i 4 pakiety. Nie są to aktualne warunki sprzedaży Wawelu.
+Dodawanie i edycję można wykonywać również klientem HTTP, np. PowerShellem albo Postmanem. Domyślny plik ma dane dydaktyczne: 3 atrakcje, 4 produkty zwiedzania, 2 usługi, 1 ofertę i 4 pakiety. Nie są to aktualne warunki sprzedaży Wawelu.
 
 Aby zacząć z pustym katalogiem, użyj nowego pliku:
 
@@ -174,6 +183,8 @@ Jeden niedostępny składnik oznacza niedostępność całego pakietu. System ni
 | Metoda | Ścieżka | Wynik |
 |---|---|---|
 | GET | `/health` | Stan i kolekcje |
+| GET | `/` albo `/admin` | Strona klienta albo panel admina |
+| POST | `/packages/from-cart` | Utworzenie oferty i pakietu z koszyka w jednej transakcji |
 | GET | `/{collection}` | Lista |
 | GET | `/{collection}/{id}` | Bieżąca wersja i flaga archiwizacji |
 | POST | `/{collection}` | Utworzenie struktury |
@@ -183,7 +194,9 @@ Jeden niedostępny składnik oznacza niedostępność całego pakietu. System ni
 | GET | `/{collection}/{id}/versions/{version}` | Wybrana wersja |
 | GET | `/packages/{id}/availability?date=2026-11-03` | Status, dostępność i przyczyny |
 
-Domyślna data sprawdzenia to lokalna data komputera serwera. Statusy: `current`, `planned`, `expired`, `archived`. Status `current` nie oznacza dostępności przy czasowym wyłączeniu. Brak wyszukiwarki i filtrowania.
+Domyślna data sprawdzenia to lokalna data komputera serwera. Statusy: `current`, `planned`, `expired`, `archived`. Status `current` nie oznacza dostępności przy czasowym wyłączeniu. Wyszukiwanie w stronie filtruje katalog pobrany do przeglądarki; API nie ma parametrów wyszukiwania.
+
+`POST /packages/from-cart` przyjmuje `name`, `description`, `items` jak w ofercie oraz opcjonalne warunki pakietu: `audience`, `min_participants`, `max_participants`, `valid_from` i `valid_to`. Zwraca `{ "offer": {...}, "package": {...} }` ze statusem 201.
 
 Błędy mają treść `{ "error": "opis" }`: 400 walidacja, 404 brak obiektu lub wersji, 409 konflikt, 413 limit treści, 500 problem zapisu lub odczytu.
 
@@ -218,6 +231,7 @@ Demo pokazuje struktury, ich połączenia i wpływ zamknięcia atomu na pakiet. 
 - `catalog.py`: relacje, operacje, wersjonowanie, kopie i dostępność.
 - `storage.py`: transakcje JSON z blokadą wątków i atomową podmianą pliku.
 - `server.py`: lokalne API HTTP.
+- `static/`: strona HTML, style CSS i JavaScript; bez instalacji zależności i kroku budowania.
 - `seed.py`, `demo.py`: dane przykładowe i scenariusz demonstracyjny.
 
 Jeden proces na plik danych. Równoległe żądania w jego obrębie są synchronizowane; kilka procesów nie ma wspólnej blokady. Nie edytuj pliku ręcznie podczas pracy serwera. Uszkodzony JSON lub schemat inny niż 3 powoduje błąd, nie automatyczny reset danych.

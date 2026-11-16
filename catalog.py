@@ -61,32 +61,51 @@ class Catalog:
         return result
 
     def save(self, collection, payload, identity=None):
+        return self.store.transaction(lambda data: self._save(data, collection, payload, identity))
+
+    def _save(self, data, collection, payload, identity=None):
+        """Zapisz obiekt w ramach transakcji wywołującego."""
         check(collection in MODELS, "Nieznana kolekcja")
         check(isinstance(payload, dict), "Wymagany obiekt JSON")
+        object_id = identity or str(uuid4())
+        if identity is None:
+            item = {"archived": False, "versions": []}
+            body = deepcopy(payload)
+        else:
+            item = get_record(data, collection, identity)
+            previous = active(data, collection, identity)
+            expected = payload.get("expected_version")
+            if type(expected) is not int or expected != previous["version"]:
+                raise DomainError("Konflikt wersji. Podaj aktualne expected_version.", 409)
+            body = {key: deepcopy(value) for key, value in previous.items()
+                    if key not in {"id", "version", "saved_at", "snapshot"}}
+            body.update({key: deepcopy(value) for key, value in payload.items() if key != "expected_version"})
+        model = parse_model(collection, body)
+        self._validate_links(data, collection, object_id, model)
+        result = asdict(model)
+        result.update(id=object_id, version=len(item["versions"]) + 1,
+                      saved_at=datetime.now(timezone.utc).isoformat())
+        if collection == "packages":
+            result["snapshot"] = self._snapshot(data, model.target)
+        item["versions"].append(result)
+        data[collection][object_id] = item
+        return result
+
+    def create_from_cart(self, payload):
+        """Utwórz ofertę ze składu koszyka i powiązany pakiet w jednym zapisie."""
+        check(isinstance(payload, dict), "Wymagany obiekt JSON")
+        allowed = {"name", "description", "items", "audience", "min_participants",
+                   "max_participants", "valid_from", "valid_to"}
+        check(not set(payload) - allowed, "Nieznane pola koszyka")
+
         def operation(data):
-            object_id = identity or str(uuid4())
-            if identity is None:
-                item = {"archived": False, "versions": []}
-                body = deepcopy(payload)
-            else:
-                item = get_record(data, collection, identity)
-                previous = active(data, collection, identity)
-                expected = payload.get("expected_version")
-                if type(expected) is not int or expected != previous["version"]:
-                    raise DomainError("Konflikt wersji. Podaj aktualne expected_version.", 409)
-                body = {key: deepcopy(value) for key, value in previous.items()
-                        if key not in {"id", "version", "saved_at", "snapshot"}}
-                body.update({key: deepcopy(value) for key, value in payload.items() if key != "expected_version"})
-            model = parse_model(collection, body)
-            self._validate_links(data, collection, object_id, model)
-            result = asdict(model)
-            result.update(id=object_id, version=len(item["versions"]) + 1,
-                          saved_at=datetime.now(timezone.utc).isoformat())
-            if collection == "packages":
-                result["snapshot"] = self._snapshot(data, model.target)
-            item["versions"].append(result)
-            data[collection][object_id] = item
-            return result
+            offer = self._save(data, "offers", {
+                key: deepcopy(payload[key]) for key in ("name", "description", "items") if key in payload})
+            package = self._save(data, "packages", {
+                **{key: deepcopy(value) for key, value in payload.items() if key != "items"},
+                "target": {"kind": "offer", "id": offer["id"]}})
+            return {"offer": offer, "package": package}
+
         return self.store.transaction(operation)
 
     def list(self, collection):

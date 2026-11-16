@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173e35">
+  <meta name="description" content="Odkrywaj atrakcje, wybieraj wizyty i układaj własny pakiet zwiedzania.">
+  <title>Wawel — odkrywaj po swojemu</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Przejdź do treści</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Wawel — strona główna">
+      <svg class="brand-mark" viewBox="0 0 40 44" fill="none" aria-hidden="true"><path d="M6 39V18h8V8l6-5 6 5v10h8v21M2 39h36M14 18h12M17 39V28a3 3 0 0 1 6 0v11M10 23v3M30 23v3M20 12v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Wawel<span class="brand-subtitle">MAŁE PLANY. WIELKIE ODKRYCIA.</span></span>
+    </a>
+    <nav class="view-nav" aria-label="Widok strony">
+      <a href="/" id="client-link">Odkrywaj</a>
+      <a href="/admin" id="admin-link">Panel admina <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1"><div class="loading-state"><span class="spinner" aria-hidden="true"></span>Wczytujemy miejsca i możliwości…</div></main>
+  <footer class="site-footer"><span>Wawel. Twój pomysł na zwiedzanie.</span><span>Katalog demonstracyjny · bez sprzedaży i rezerwacji</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="editor" class="editor-dialog" aria-labelledby="editor-title"></dialog>
+  <dialog id="details" class="details-dialog" aria-labelledby="details-title"></dialog>
+  <noscript><p class="notice">Włącz JavaScript, aby korzystać z katalogu i układać pakiety.</p></noscript>
+</body>
+</html>
